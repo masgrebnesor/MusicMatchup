@@ -72,6 +72,13 @@ def login():
 def sign():
     return render_template('signup.html')
 
+@app.route('/song1')
+def song1():
+    print("song1 wins")
+
+@app.route('/song2')
+def song2():
+    print("song2 wins")
 
 @app.route('/signup', methods=['POST'])
 def signup():
