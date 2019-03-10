@@ -20,6 +20,7 @@ class Song(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     song = db.Column(db.String)
     mp3_file = db.Column(db.String)
+    rank = db.Column(db.Integer)
  
     artist_id = db.Column(db.Integer, db.ForeignKey("artists.id"))
     artist = db.relationship("Artist", backref=db.backref(

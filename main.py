@@ -22,25 +22,21 @@ engine = create_engine('sqlite:///tutorial.db', echo=True)
 
 user = ""
 
-files = os.listdir('static/music')
-index = random.randrange(0, len(files))
-print(files[index])
-webbrowser.open("/music/" + files[index])
-
 @app.route('/')
 def home():
     if not session.get('logged_in'):
         return render_template('index.html')
     else:
         files = os.listdir('static/music')
-        index1 = random.randrange(0, len(files))
-        index2 = random.randrange(0, len(files))
-        if (len(files) != 0):
-            while index1 == index2:
-                index2 = random.randrange(0, len(files))
+        if len(files) != 0:
+            index1 = random.randrange(0, len(files))
+            index2 = random.randrange(0, len(files))
+            if (len(files) != 0):
+                while index1 == index2:
+                    index2 = random.randrange(0, len(files))
 
-        return render_template('index.html', user=user, song1="static/music/" + files[index1], song2="static/music/" + files[index2])
-
+            return render_template('index.html', user=user, song1="static/music/" + files[index1], song2="static/music/" + files[index2])
+    return render_template('index.html', user=user)
 
 @app.route('/logon')
 def logon():
@@ -72,6 +68,7 @@ def login():
 def sign():
     return render_template('signup.html')
 
+#implement elo ranking system of song 1 vs song 2, start with 1600
 @app.route('/song1')
 def song1():
     print("song1 wins")
@@ -173,6 +170,7 @@ def save_changes(song, form, new=False):
     song.artist = artist
     song.song = form.song.data
     song.mp3_file = form.mp3_file.data
+    song.rank = 1600
 
     if new:
         # Add the new album to the database

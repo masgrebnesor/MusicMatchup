@@ -5,5 +5,7 @@ class Results(Table):
     artist = Col('Artist')
     song = Col('Song')
     #mp3_file = Col('Audio File')
+    rank = Col('Ranking')
     edit = LinkCol('Edit', 'edit', url_kwargs=dict(id='id'))
     delete = LinkCol('Delete', 'delete', url_kwargs=dict(id='id'))
+

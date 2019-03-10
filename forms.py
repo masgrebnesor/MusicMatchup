@@ -13,3 +13,4 @@ class SongForm(Form):
     artist = StringField('Artist')
     song = StringField('Song')
     mp3_file = FileField('Audio File')
+    rank = 1600
