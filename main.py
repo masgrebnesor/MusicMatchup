@@ -18,8 +18,8 @@ from werkzeug.utils import secure_filename
 import random
 import webbrowser
 
-#songone = ""
-#songtwo = ""
+songone = Song()
+songtwo = Song()
 
 engine = create_engine('sqlite:///tutorial.db', echo=True)
 
@@ -37,6 +37,14 @@ def home():
             if (len(files) > 1):
                 while index1 == index2:
                     index2 = random.randrange(0, len(files))
+
+            global songone
+            global songtwo
+            songone = song_lookup(files[index1])
+            songtwo = song_lookup(files[index2])
+
+            print(songone)
+            print(songtwo)
 
             return render_template('index.html', user=user, song1="static/music/" + files[index1], song2="static/music/" + files[index2])
     return render_template('index.html', user=user)
@@ -74,8 +82,8 @@ def sign():
 #implement elo ranking system of song 1 vs song 2, start with 1600
 @app.route('/song1')
 def song1():
-    s1 = song1.rank
-    s2 = song2.rank
+    s1 = songone.rank
+    s2 = songone.rank
 
     q1 = 10**(s1/400)
     q2 = 10**(s2/400)
@@ -86,12 +94,14 @@ def song1():
     s1 = s1 + 32*e2
     s2 = s2 - 32*e2
 
+    print(s1)
+
     return home()
 
 @app.route('/song2')
 def song2():
-    s1 = song1.rank
-    s2 = song2.rank
+    s1 = songone.rank
+    s2 = songtwo.rank
 
     q1 = 10 ** (s1 / 400)
     q2 = 10 ** (s2 / 400)
@@ -135,6 +145,13 @@ def index():
 
     return render_template('indexmusic.html', form=search)
 
+def song_lookup(search_string):
+    print(search_string)
+    print(Song.mp3_file)
+    qry = db_session.query(Song).filter(
+        Song.mp3_file.contains(search_string))
+    song = qry.first()
+    return song
 
 @app.route('/results')
 def search_results(search):
