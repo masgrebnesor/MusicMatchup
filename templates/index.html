@@ -9,6 +9,10 @@
 {% if not session['logged_in'] %}
    <input type="submit" value="Log in" class="btn btn-primary btn-large btn-block" onclick="window.location='/logon';" >
     <input type="submit" value="Sign up" class="btn btn-primary btn-large btn-block" onclick="window.location='/sign';" >
+
+{% else %}
+    <input type="submit" value="Log out" class="btn btn-primary btn-large btn-block" onclick="window.location='/logout';" >
+    <input type="submit" value="Search" class="btn btn-primary btn-large btn-block" onclick="window.location='/search';" >
 {% endif %}
 
 {% if session['logged_in'] %}
