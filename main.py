@@ -40,6 +40,8 @@ def home():
 
             global songone
             global songtwo
+            print(files[index1])
+            print(files[index2])
             songone = song_lookup(files[index1])
             songtwo = song_lookup(files[index2])
 
@@ -94,7 +96,8 @@ def song1():
     s1 = s1 + 32*e2
     s2 = s2 - 32*e2
 
-    print(s1)
+    change_score(songone, s1)
+    change_score(songtwo, s2)
 
     return home()
 
@@ -111,6 +114,9 @@ def song2():
 
     s1 = s1 - 32 * e1
     s2 = s2 + 32 * e1
+
+    change_score(songone, s1)
+    change_score(songtwo, s2)
 
     return home()
 
@@ -146,10 +152,8 @@ def index():
     return render_template('indexmusic.html', form=search)
 
 def song_lookup(search_string):
-    print(search_string)
-    print(Song.mp3_file)
     qry = db_session.query(Song).filter(
-        Song.mp3_file.contains(search_string))
+        Song.mp3_file.contains(search_string[:-4]))
     song = qry.first()
     return song
 
@@ -201,6 +205,10 @@ def new_song():
 
     return render_template('new_album.html', form=form) #should be new_song, not new_album
 
+def change_score(song, newrank):
+    song.rank = newrank
+    db_session.add(song)
+    db_session.commit()
 
 def save_changes(song, form, new=False):
     """
@@ -214,10 +222,11 @@ def save_changes(song, form, new=False):
     song.artist = artist
     song.song = form.song.data
     song.mp3_file = form.mp3_file.data
-    song.rank = 1600
+    print(form.mp3_file.data)
 
     if new:
         # Add the new album to the database
+        song.rank = 1600
         db_session.add(song)
 
     # commit the data to the database
@@ -234,7 +243,7 @@ def upload_file2():
     if request.method == 'POST':
         f = request.files['file']
         f.save('static/music/' + secure_filename(f.filename))
-        return home()
+        return redirect('/')
 
 
 @app.route('/item/<int:id>', methods=['GET', 'POST'])
