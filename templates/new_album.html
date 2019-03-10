@@ -1,17 +1,14 @@
 <doctype html>
-    <link rel="stylesheet" href="/static/new.css" type="text/css">
-<title>New Album - Flask Music Database</title>
-<h2>New Album</h2>
+    <link rel="stylesheet" href="/static/failing.css" type="text/css">
+<title>New Song </title>
+<h2>New Song</h2>
 
  
 {% from "_formhelpers.html" import render_field %}
 <form method=post class = "middle">
     <dl>
         {{ render_field(form.artist) }}
-        {{ render_field(form.title) }}
-        {{ render_field(form.release_date) }}
-        {{ render_field(form.publisher) }}
-        {{ render_field(form.media_type) }}
+        {{ render_field(form.song) }}
         {{ render_field(form.mp3_file) }}
     </dl>
     <p><input type=submit value=Submit class="btn btn-primary btn-large btn-block">

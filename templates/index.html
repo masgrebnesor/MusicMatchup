@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="stylesheet" href="/static/new.css" type="text/css">
+    <link rel="stylesheet" href="/static/failing.css" type="text/css">
     <meta charset="UTF-8">
     <title>Home</title>
 </head>
@@ -12,11 +12,33 @@
 
 {% else %}
     <input type="submit" value="Log out" class="btn btn-primary btn-large btn-block" onclick="window.location='/logout';" >
-    <input type="submit" value="Search" class="btn btn-primary btn-large btn-block" onclick="window.location='/upload';" >
+    <input type="submit" value="Add song" class="btn btn-primary btn-large btn-block" onclick="window.location='/search';" >
 {% endif %}
 
 {% if session['logged_in'] %}
     <h1 class="welcome">Welcome {{ user }}!</h1>
+
+    <div>
+    <div class="float-left">
+        <audio controls>
+            <source src={{ song1 }} type="audio/mpeg">
+        </audio>
+    </div>
+    <div class="float-left">
+        <audio controls>
+            <source src={{ song2 }} type="audio/mpeg">
+        </audio>
+    </div>
+    </div>
+
+    <div>
+    <div class="float-left" style="text-align: center">
+        {{ song1 }}
+    </div>
+    <div class="float-left" style="text-align: center">
+       {{ song2 }}
+    </div>
+    </div>
 
 {% endif %}
 

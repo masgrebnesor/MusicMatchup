@@ -5,19 +5,11 @@ from wtforms import Form, StringField, SelectField, FileField
 
 class MusicSearchForm(Form):
     choices = [('Artist', 'Artist'),
-               ('Album', 'Album'),
-               ('Publisher', 'Publisher')]
+               ('Song', 'Song')]
     select = SelectField('Search for music:', choices=choices)
     search = StringField('')
 
-class AlbumForm(Form):
-    media_types = [('Digital', 'Digital'),
-                   ('CD', 'CD'),
-                   ('Cassette Tape', 'Cassette Tape')
-                   ]
+class SongForm(Form):
     artist = StringField('Artist')
-    title = StringField('Title')
-    release_date = StringField('Release Date')
-    publisher = StringField('Publisher')
-    media_type = SelectField('Media', choices=media_types)
+    song = StringField('Song')
     mp3_file = FileField('Audio File')

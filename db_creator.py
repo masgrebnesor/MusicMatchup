@@ -19,20 +19,17 @@ class Artist(Base):
         return "{}".format(self.name)
  
  
-class Album(Base):
+class Song(Base):
     """"""
-    __tablename__ = "albums"
+    __tablename__ = "song"
  
     id = Column(Integer, primary_key=True)
-    title = Column(String)
-    release_date = Column(String)
-    publisher = Column(String)
-    media_type = Column(String)
+    song = Column(String)
     mp3_file = Column(String)
  
     artist_id = Column(Integer, ForeignKey("artists.id"))
     artist = relationship("Artist", backref=backref(
-        "albums", order_by=id))
+        "song", order_by=id))
  
 # create tables
 Base.metadata.create_all(engine)

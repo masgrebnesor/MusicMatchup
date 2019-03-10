@@ -1,15 +1,13 @@
 <doctype html>
-<title>Delete Album - Flask Music Database</title>
-<h2>Delete Album</h2>
+<title>Delete Song</title>
+<h2>Delete Song</h2>
  
 {% from "_formhelpers.html" import render_field %}
 <form method=post>
     <dl>
         {{ render_field(form.artist) }}
-        {{ render_field(form.title) }}
-        {{ render_field(form.release_date) }}
-        {{ render_field(form.publisher) }}
-        {{ render_field(form.media_type) }}
+        {{ render_field(form.song) }}
+        {{ render_field(form.mp3_file) }}
     </dl>
     <p><input type=submit value=Delete>
 </form>

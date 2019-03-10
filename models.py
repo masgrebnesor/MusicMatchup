@@ -13,17 +13,14 @@ class Artist(db.Model):
         return "<Artist: {}>".format(self.name)
  
  
-class Album(db.Model):
+class Song(db.Model):
     """"""
-    __tablename__ = "albums"
+    __tablename__ = "song"
  
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String)
-    release_date = db.Column(db.String)
-    publisher = db.Column(db.String)
-    media_type = db.Column(db.String)
-    #mp3_file = db.Column(db.String)
+    song = db.Column(db.String)
+    mp3_file = db.Column(db.String)
  
     artist_id = db.Column(db.Integer, db.ForeignKey("artists.id"))
     artist = db.relationship("Artist", backref=db.backref(
-        "albums", order_by=id), lazy=True)
+        "song", order_by=id), lazy=True)

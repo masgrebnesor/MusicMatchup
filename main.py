@@ -1,9 +1,8 @@
 from app import app
 from db_setup import init_db, db_session
-from forms import MusicSearchForm, AlbumForm
+from forms import MusicSearchForm, SongForm
 from flask import flash, render_template, request, redirect
-from models import Album
-from models import Album, Artist
+from models import Song, Artist
 from tables import Results
 
 init_db()
@@ -16,18 +15,31 @@ from tabledef import *
 import uuid
 from flask_login import LoginManager
 from werkzeug.utils import secure_filename
+import random
+import webbrowser
 
 engine = create_engine('sqlite:///tutorial.db', echo=True)
 
 user = ""
 
+files = os.listdir('static/music')
+index = random.randrange(0, len(files))
+print(files[index])
+webbrowser.open("/music/" + files[index])
 
 @app.route('/')
 def home():
     if not session.get('logged_in'):
         return render_template('index.html')
     else:
-        return render_template('index.html', user=user)
+        files = os.listdir('static/music')
+        index1 = random.randrange(0, len(files))
+        index2 = random.randrange(0, len(files))
+        if (len(files) != 0):
+            while index1 == index2:
+                index2 = random.randrange(0, len(files))
+
+        return render_template('index.html', user=user, song1="static/music/" + files[index1], song2="static/music/" + files[index2])
 
 
 @app.route('/logon')
@@ -100,23 +112,19 @@ def search_results(search):
 
     if search_string:
         if search.data['select'] == 'Artist':
-            qry = db_session.query(Album, Artist).filter(
-                Artist.id == Album.artist_id).filter(
+            qry = db_session.query(Song, Artist).filter(
+                Artist.id == Song.artist_id).filter(
                 Artist.name.contains(search_string))
             results = [item[0] for item in qry.all()]
-        elif search.data['select'] == 'Album':
-            qry = db_session.query(Album).filter(
-                Album.title.contains(search_string))
-            results = qry.all()
-        elif search.data['select'] == 'Publisher':
-            qry = db_session.query(Album).filter(
-                Album.publisher.contains(search_string))
+        elif search.data['select'] == 'Song':
+            qry = db_session.query(Song).filter(
+                Song.title.contains(search_string))
             results = qry.all()
         else:
-            qry = db_session.query(Album)
+            qry = db_session.query(Song)
             results = qry.all()
     else:
-        qry = db_session.query(Album)
+        qry = db_session.query(Song)
         results = qry.all()
 
     if not results:
@@ -130,23 +138,23 @@ def search_results(search):
 
 
 @app.route('/new_album', methods=['GET', 'POST'])
-def new_album():
+def new_song():
     """
     Add a new album
     """
-    form = AlbumForm(request.form)
+    form = SongForm(request.form)
 
     if request.method == 'POST' and form.validate():
         # save the album
-        album = Album()
-        save_changes(album, form, new=True)
-        flash('Album created successfully!')
-        return redirect('/search')
+        song = Song()
+        save_changes(song, form, new=True)
+        flash('Song uploaded successfully!')
+        return redirect('/upload')
 
-    return render_template('new_album.html', form=form)
+    return render_template('new_album.html', form=form) #should be new_song, not new_album
 
 
-def save_changes(album, form, new=False):
+def save_changes(song, form, new=False):
     """
     Save the changes to the database
     """
@@ -155,22 +163,18 @@ def save_changes(album, form, new=False):
     artist = Artist()
     artist.name = form.artist.data
 
-    album.artist = artist
-    album.title = form.title.data
-    album.release_date = form.release_date.data
-    album.publisher = form.publisher.data
-    album.media_type = form.media_type.data
-    album.mp3_file = form.mp3_file.data
+    song.artist = artist
+    song.song = form.song.data
+    song.mp3_file = form.mp3_file.data
 
     if new:
         # Add the new album to the database
-        db_session.add(album)
+        db_session.add(song)
 
     # commit the data to the database
     db_session.commit()
 
 
-# new code from arushi starts here
 @app.route('/upload')
 def upload_file():
     return render_template('upload.html')
@@ -180,25 +184,24 @@ def upload_file():
 def upload_file2():
     if request.method == 'POST':
         f = request.files['file']
-        f.save('music/' + secure_filename(f.filename))
+        f.save('static/music/' + secure_filename(f.filename))
         return home()
 
 
-# new code from arushi ends here
 @app.route('/item/<int:id>', methods=['GET', 'POST'])
 def edit(id):
-    qry = db_session.query(Album).filter(
-        Album.id == id)
-    album = qry.first()
+    qry = db_session.query(Song).filter(
+        Song.id == id)
+    song = qry.first()
 
-    if album:
-        form = AlbumForm(formdata=request.form, obj=album)
+    if song:
+        form = SongForm(formdata=request.form, obj=song)
         if request.method == 'POST' and form.validate():
             # save edits
-            save_changes(album, form)
-            flash('Album updated successfully!')
+            save_changes(song, form)
+            flash('Song updated successfully!')
             return redirect('/search')
-        return render_template('edit_album.html', form=form)
+        return render_template('edit_album.html', form=form) #edit_song, not edit_album
     else:
         return 'Error loading #{id}'.format(id=id)
 
@@ -209,20 +212,20 @@ def delete(id):
     Delete the item in the database that matches the specified
     id in the URL
     """
-    qry = db_session.query(Album).filter(
-        Album.id == id)
-    album = qry.first()
+    qry = db_session.query(Song).filter(
+        Song.id == id)
+    song = qry.first()
 
-    if album:
-        form = AlbumForm(formdata=request.form, obj=album)
+    if song:
+        form = SongForm(formdata=request.form, obj=song)
         if request.method == 'POST' and form.validate():
             # delete the item from the database
-            db_session.delete(album)
+            db_session.delete(song)
             db_session.commit()
 
-            flash('Album deleted successfully!')
+            flash('Song deleted successfully!') #this is so sick oh my gosh -caroline (p.s. omg i want it where is it from)
             return redirect('/')
-        return render_template('delete_album.html', form=form)
+        return render_template('delete_album.html', form=form) #song, not album
     else:
         return 'Error deleting #{id}'.format(id=id)
 
