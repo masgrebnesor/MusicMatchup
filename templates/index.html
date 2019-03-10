@@ -3,8 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <title>Home</title>
+    <link rel="stylesheet" href="/static/style.css" type="text/css">
 </head>
 <body>
+{% if not session['logged_in'] %}
+    <a href="/logon">Log On</a>
+    <a href="/sign">Sign Up</a>
+{% endif %}
 
+{% if session['logged_in'] %}
+    <h1 class="welcome">Welcome {{ user }}!</h1>
+
+{% endif %}
+ `
 </body>
 </html>
