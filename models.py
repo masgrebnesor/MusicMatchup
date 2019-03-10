@@ -22,7 +22,7 @@ class Album(db.Model):
     release_date = db.Column(db.String)
     publisher = db.Column(db.String)
     media_type = db.Column(db.String)
-    #mp3_file = db.Column(db.LargeBinary)
+    #mp3_file = db.Column(db.String)
  
     artist_id = db.Column(db.Integer, db.ForeignKey("artists.id"))
     artist = db.relationship("Artist", backref=db.backref(

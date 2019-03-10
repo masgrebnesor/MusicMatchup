@@ -4,6 +4,11 @@
     font-size: 60px;
 }
 
+.middle
+{
+    align-content: center;
+}
+
 body
 {
     background-color: #dbb8ca;

@@ -20,4 +20,4 @@ class AlbumForm(Form):
     release_date = StringField('Release Date')
     publisher = StringField('Publisher')
     media_type = SelectField('Media', choices=media_types)
-    mp3_file = FileField(u'Audio File')
+    mp3_file = FileField('Audio File')

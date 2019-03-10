@@ -15,6 +15,7 @@ from sqlalchemy.orm import sessionmaker
 from tabledef import *
 import uuid
 from flask_login import LoginManager
+from werkzeug.utils import secure_filename
 
 engine = create_engine('sqlite:///tutorial.db', echo=True)
 
@@ -169,6 +170,21 @@ def save_changes(album, form, new=False):
     db_session.commit()
 
 
+# new code from arushi starts here
+@app.route('/upload')
+def upload_file():
+    return render_template('upload.html')
+
+
+@app.route('/uploader', methods=['GET', 'POST'])
+def upload_file2():
+    if request.method == 'POST':
+        f = request.files['file']
+        f.save('music/' + secure_filename(f.filename))
+        return home()
+
+
+# new code from arushi ends here
 @app.route('/item/<int:id>', methods=['GET', 'POST'])
 def edit(id):
     qry = db_session.query(Album).filter(
