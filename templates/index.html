@@ -30,15 +30,19 @@
         </audio>
     </div>
     </div>
-
     <div>
-    <div class="float-left" style="text-align: center">
-        {{ song1 }}
+    <div class="float-left">
+        <input type="submit" value="{{ song1 }}" class="btn btn-primary btn-large btn-block" onclick="window.location='/song1';" >
     </div>
-    <div class="float-left" style="text-align: center">
-       {{ song2 }}
+
+     <div class="float-left">
+        <input type="submit" value="{{ song2 }}" class="btn btn-primary btn-large btn-block" onclick="window.location='/song2';" >
+    </div>
+    <div class="float-left">
+
     </div>
     </div>
+
 
 {% endif %}
 
