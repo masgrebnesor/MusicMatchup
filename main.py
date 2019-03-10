@@ -120,7 +120,7 @@ def search_results(search):
 
     if not results:
         flash('No results found!')
-        return redirect('/')
+        return redirect('/search')
     else:
         # display results
         table = Results(results)
@@ -140,7 +140,7 @@ def new_album():
         album = Album()
         save_changes(album, form, new=True)
         flash('Album created successfully!')
-        return redirect('/')
+        return redirect('/search')
 
     return render_template('new_album.html', form=form)
 
@@ -159,6 +159,7 @@ def save_changes(album, form, new=False):
     album.release_date = form.release_date.data
     album.publisher = form.publisher.data
     album.media_type = form.media_type.data
+    album.mp3_file = form.mp3_file.data
 
     if new:
         # Add the new album to the database
@@ -180,7 +181,7 @@ def edit(id):
             # save edits
             save_changes(album, form)
             flash('Album updated successfully!')
-            return redirect('/')
+            return redirect('/search')
         return render_template('edit_album.html', form=form)
     else:
         return 'Error loading #{id}'.format(id=id)

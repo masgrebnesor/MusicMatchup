@@ -1,7 +1,8 @@
 # forms.py
  
-from wtforms import Form, StringField, SelectField
- 
+from wtforms import Form, StringField, SelectField, FileField
+
+
 class MusicSearchForm(Form):
     choices = [('Artist', 'Artist'),
                ('Album', 'Album'),
@@ -19,3 +20,4 @@ class AlbumForm(Form):
     release_date = StringField('Release Date')
     publisher = StringField('Publisher')
     media_type = SelectField('Media', choices=media_types)
+    mp3_file = FileField(u'Audio File')
