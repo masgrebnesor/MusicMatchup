@@ -134,6 +134,9 @@ def signup():
 
     session['logged_in'] = True
     session['false'] = True
+
+    global user
+    user = POST_USERNAME
     return home()
 
 
