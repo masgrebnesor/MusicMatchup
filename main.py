@@ -18,6 +18,9 @@ from werkzeug.utils import secure_filename
 import random
 import webbrowser
 
+#songone = ""
+#songtwo = ""
+
 engine = create_engine('sqlite:///tutorial.db', echo=True)
 
 user = ""
@@ -31,7 +34,7 @@ def home():
         if len(files) != 0:
             index1 = random.randrange(0, len(files))
             index2 = random.randrange(0, len(files))
-            if (len(files) != 0):
+            if (len(files) > 1):
                 while index1 == index2:
                     index2 = random.randrange(0, len(files))
 
@@ -71,11 +74,35 @@ def sign():
 #implement elo ranking system of song 1 vs song 2, start with 1600
 @app.route('/song1')
 def song1():
-    print("song1 wins")
+    s1 = song1.rank
+    s2 = song2.rank
+
+    q1 = 10**(s1/400)
+    q2 = 10**(s2/400)
+
+    e1 = q1 / (q1+q2)
+    e2 = q2 / (q1+q2)
+
+    s1 = s1 + 32*e2
+    s2 = s2 - 32*e2
+
+    return home()
 
 @app.route('/song2')
 def song2():
-    print("song2 wins")
+    s1 = song1.rank
+    s2 = song2.rank
+
+    q1 = 10 ** (s1 / 400)
+    q2 = 10 ** (s2 / 400)
+
+    e1 = q1 / (q1 + q2)
+    e2 = q2 / (q1 + q2)
+
+    s1 = s1 - 32 * e1
+    s2 = s2 + 32 * e1
+
+    return home()
 
 @app.route('/signup', methods=['POST'])
 def signup():
